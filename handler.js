@@ -7,11 +7,13 @@
 const serverlessHttp = require('serverless-http');
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require("body-parser")
 
 // logically separate 4 sections of code according to the method of the HTTP request recieved
 
 const app = express();
 app = use(cors());
+app = use(bodyParser.json())
 
 // this function should made a SELECT * FROM Tasks query to the DB and return the result
 // for now, it;s just going to return dummy data
@@ -75,8 +77,12 @@ const taskIdToBeDeleted = request.params.taskId;
 // for now, just send back a text message (and status 200) "New task saved"
 
 app.post('/tasks', function (request, response) {
+
+    const text= request.body.text;
+    const date =request.body.date;
+
     response.status(201).send({
-        message: "Received a request to add task buy cat food with date 2019-10-07"
+        message: 'Received a request to add task ${text} with date ${date}'
       })
 });
 
