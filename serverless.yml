@@ -6,30 +6,30 @@ provider:
   runtime: nodejs12.x
   region: eu-west-1
 
-
 functions:
   tasks:
-    handler: handler.app    #handler - name of file, tasks = name of export 
+    handler: handler.app # handler - name of file, app = named export
+    environment:
+      DB_HOST: ${opt:DB_HOST}
+      DB_USER: ${opt:DB_USER}
+      DB_PASSWORD: ${opt:DB_PASSWORD}   
     events:
       - http:
-         path: /tasks
-         method: GET
-         cors: true #cross origin resource sharing (make request from one domin (front end) to the other(backend))
+          path: /tasks
+          method: get
+          cors: true # Cross Origin Resource Sharing(make request from one domin (front end) to the other(backend))
       - http:
-         path: /tasks/{id} #id is a path parameter
-         method: PUT
-         cors: true 
+          path: /tasks/{id} #id is a path parameter
+          method: put
+          cors: true # Cross Origin Resource Sharing
       - http:
-         path: /tasks
-         method: POST
-         cors: true 
+          path: /tasks
+          method: post
+          cors: true # Cross Origin Resource Sharing
       - http:
-         path: /tasks/{id}
-         method: Delete
-         cors: true 
-
-
-
+          path: /tasks/{id}
+          method: delete
+          cors: true # Cross Origin Resource Sharing
 
 
 
