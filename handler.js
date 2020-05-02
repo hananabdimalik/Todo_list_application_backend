@@ -40,9 +40,12 @@ app.use(bodyParser.json())
   // Resposne has some useful methods for sending a response
 
 app.get('/tasks', function (request, response) {
- 
+ console.log(process.env)
   //make DB query to the DB, defne a function that will run when the query becomes successful or not, 
   //in the if / else send out response
+
+
+
 
   connection.query("SELECT * FROM Tasks", function (err, data) {
     if (err) {
@@ -57,8 +60,15 @@ app.get('/tasks', function (request, response) {
 
 app.delete('/tasks/:id', function (request, response) {
   const id = request.params.id;
-
-  response.status(200).send(`Deleted a task with ID ${id}!`);
+  const query = "DELETE FROM Tasks WHERE TaskId = ?";
+  connection.query(query, [id], (err) => {
+    if(err){
+      console.log("Error from MYSQL", err);
+      response.status(500).send(err);
+    }else {
+      response.status(200).send("Task deleted")
+    }
+  });
 });
 
 
@@ -69,14 +79,14 @@ app.post('/tasks', function (request, response) {
   //SQL injection - avoid this by "escaping" user-provided values
   const query = `INSERT INTO Tasks (Description,Completed, Deadline, Status) VALUES (?, ?, ?, ?)`;
 
-  connection.query(query, [data.Description, False, data.Deadline, data.status], function (err, results) {
+  connection.query(query, [data.Description, false, data.Deadline, data.Status], function (err, results) {
     if (err) {
       console.log("Error from MYSQL", err);
       response.status(500).send(err);
     } else {
       //send back the newly created task
       //because the front ens or the client might want to know the ID
-      connection.query(`SELECT * FROM Tasks Where TaskId = ${results.insertID}`, function (err, results) {
+      connection.query(`SELECT * FROM Tasks WHERE TaskId = ${results.insertId}`, function (err, results) {
         if (err) {
           console.log("Error from MYSQL", err);
           response.status(500).send(err);
@@ -88,16 +98,19 @@ app.post('/tasks', function (request, response) {
   });
 });
 
-//{text: "wash the dog", Deadline: "20-05-2020"}
-//{completed:true }
+
 app.put('/tasks/:id', function (request, response) {
-
-const query = `UPDATE Task`
-connection.query( )
-
   const id = request.params.id;
-  const data = request.body
-  response.status(200).send(`updated a task with ID ${id} and data ${JSON.stringify(data)}`);
+  const data = request.body;
+  const query = "UPDATE Tasks SET ? WHERE TaskId = ?";
+  connection.query(query, [data, id], (err) => {
+    if(err){
+      console.log("Error from MYSQL", err);
+      response.status(200).send(err); 
+    } else {
+      response.status(200).send("Updated Task")
+    }
+  });
 });
 
 // // when a get request comes in, this is the function we want to run, the function should do something
