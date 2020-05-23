@@ -1,3 +1,4 @@
+
 const serverlessHttp = require('serverless-http');
 const express = require('express');
 const cors = require('cors');
@@ -12,13 +13,13 @@ const connection = mysql.createConnection({
 });
 
 
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json())
 
 
 app.get('/tasks', function (request, response) {
- console.log(process.env)
 
 
   connection.query("SELECT * FROM Tasks", function (err, data) {
@@ -57,6 +58,7 @@ app.post('/tasks', function (request, response) {
       console.log("Error from MYSQL", err);
       response.status(500).send(err);
     } else {
+      
       connection.query(`SELECT * FROM Tasks WHERE TaskId = ${results.insertId}`, function (err, results) {
         if (err) {
           console.log("Error from MYSQL", err);
@@ -77,11 +79,13 @@ app.put('/tasks/:id', function (request, response) {
   connection.query(query, [data, id], (err) => {
     if(err){
       console.log("Error from MYSQL", err);
-      response.status(200).send(err); 
+      response.status(500).send(err); 
     } else {
       response.status(200).send("Updated Task")
     }
   });
 });
+
+
 
 module.exports.app = serverlessHttp(app);

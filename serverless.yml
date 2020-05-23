@@ -8,7 +8,7 @@ provider:
 
 functions:
   tasks:
-    handler: handler.app # handler - name of file, app = named export
+    handler: handler.app 
     environment:
       DB_HOST: ${opt:DB_HOST}
       DB_USER: ${opt:DB_USER}
@@ -17,9 +17,9 @@ functions:
       - http:
           path: /tasks
           method: get
-          cors: true # Cross Origin Resource Sharing(make request from one domin (front end) to the other(backend))
+          cors: true 
       - http:
-          path: /tasks/{id} #id is a path parameter
+          path: /tasks/{id} 
           method: put
           cors: true 
       - http:
